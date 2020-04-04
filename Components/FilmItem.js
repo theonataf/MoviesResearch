@@ -1,10 +1,22 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { getImageFromApi } from "../API/TMDBApi";
 
 class FilmItem extends Component {
+  _displayIfFavorite() {
+    if (this.props.isFavorite) {
+      return (
+        <Image
+          style={styles.favoriteImage}
+          source={require("../Images/ic_favorite.png")}
+        />
+      );
+    }
+  }
+
   render() {
     const {
+      id,
       vote_average,
       poster_path,
       original_title,
@@ -12,13 +24,17 @@ class FilmItem extends Component {
       release_date
     } = this.props.movie;
     return (
-      <View style={styles.main_container}>
+      <TouchableOpacity
+        onPress={() => this.props.displayDetailForFilm(id)}
+        style={styles.main_container}
+      >
         <Image
           style={styles.movies_image}
           source={{ uri: getImageFromApi(poster_path) }}
         />
         <View style={styles.movies_infos}>
           <View style={styles.header}>
+            {this._displayIfFavorite()}
             <Text style={styles.movie_title}>{original_title}</Text>
             <Text style={styles.movie_vote}> {vote_average}</Text>
           </View>
@@ -31,7 +47,7 @@ class FilmItem extends Component {
             <Text>Released on {release_date}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
@@ -76,6 +92,11 @@ const styles = StyleSheet.create({
   movie_date: {
     padding: 5,
     alignItems: "flex-end"
+  },
+  favoriteImage: {
+    width: 20,
+    height: 20,
+    marginRight: 5
   }
 });
 

@@ -2,14 +2,12 @@ import React from "react";
 import {
   View,
   Button,
-  Text,
   TextInput,
   StyleSheet,
-  FlatList,
   ActivityIndicator
 } from "react-native";
-import FilmItem from "./FilmItem";
 import { getFilmsFromApiWithSearchText } from "../API/TMDBApi";
+import FilmList from "./FilmList";
 
 class Search extends React.Component {
   constructor(props) {
@@ -23,6 +21,7 @@ class Search extends React.Component {
     };
   }
 
+  //arrow fx for binding
   _loadFilms = () => {
     this.setState({ isLoading: true });
     if (this.searchedText.length > 0) {
@@ -75,20 +74,14 @@ class Search extends React.Component {
           placeholder="Title of the movie"
           onSubmitEditing={() => this._searchFilms()}
         />
-        <Button
-          styles={styles.btn}
-          title="Search"
-          onPress={() => this._searchFilms()}
-        />
-        <FlatList
-          data={this.state.films}
-          style={styles.movie_list}
-          onEndReachedThreshold={0.5}
-          onEndReached={() => {
-            this.page < this.totalPages && this._loadFilms();
-          }}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => <FilmItem movie={item} />}
+        <Button title="Search" onPress={() => this._searchFilms()} />
+        <FilmList
+          movies={this.state.films}
+          loadFilms={this._loadFilms}
+          page={this.page}
+          totalPages={this.totalPages}
+          favoriteList={false}
+          navigation={this.props.navigation}
         />
         {this._displayLoading()}
       </View>
@@ -97,14 +90,13 @@ class Search extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  btn: { height: 50 },
-  mainContainer: { marginTop: 40, flex: 1 },
-  movie_list: { padding: 5 },
+  mainContainer: { flex: 1 },
   textinput: {
     marginLeft: 5,
     marginRight: 5,
     height: 50,
     borderColor: "#000000",
+    borderRadius: 7,
     borderWidth: 1,
     paddingLeft: 5
   },
@@ -118,4 +110,5 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
 export default Search;

@@ -5,11 +5,31 @@ export default data = [
     id: 181808,
     vote_average: 7.2,
     title: "Star Wars VIII - Les derniers Jedi",
-    poster_path: "",
+    poster_path: "/iTQHKziZy9pAAY4hHEDCGPaOvFC.jpg",
     original_title: "Star Wars: The Last Jedi",
     overview:
       "Nouvel épisode de la saga. Les héros du Réveil de la force rejoignent les figures légendaires de la galaxie dans une aventure épique qui révèle des secrets ancestraux sur la Force et entraîne de choquantes révélations sur le passé…",
-    release_date: "2017-12-13"
+    release_date: "2017-12-13",
+    vote_count: 8989,
+    budget: 20000,
+    genres: [
+      {
+        id: 18,
+        name: "Drama"
+      },
+      {
+        id: 35,
+        name: "Comedy"
+      }
+    ],
+    production_companies: [
+      {
+        id: 2303,
+        logo_path: null,
+        name: "Villealfa Filmproductions",
+        origin_country: "FI"
+      }
+    ]
   },
   {
     id: 181809,
