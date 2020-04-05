@@ -5,26 +5,61 @@ import {
   ActivityIndicator,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  Share,
+  Platform,
 } from "react-native";
 import { getFilmDetailFromApi, getImageFromApi } from "../API/TMDBApi";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 
 class FilmDetail extends Component {
+
+  static navigationOptions)
+
   constructor(props) {
     super(props);
     this.state = {
       movie: undefined,
-      isLoading: true
+      isLoading: true,
     };
   }
 
   componentDidMount() {
     const idFilm = this.props.navigation.getParam("idFilm");
-    getFilmDetailFromApi(idFilm).then(data => {
-      this.setState({ movie: data, isLoading: false });
+    getFilmDetailFromApi(idFilm).then((data) => {
+      this.setState({ movie: data, isLoading: false }, () => {
+        this._updateNavigationParams();
+      });
     });
+  }
+
+  _updateNavigationParams() {
+    this.props.navigation.setParams({
+      shareFilm: this._shareFilm,
+      movie: this.state.movie,
+    });
+  }
+  _shareFilm() {
+    const { movie } = this.state;
+    Share.share({ title: movie.title, message: movie.overview });
+  }
+
+  _displayFloatingActionButton() {
+    const { movie } = this.state;
+    if (movie !== undefined && Platform.OS === "android") {
+      return (
+        <TouchableOpacity
+          style={styles.share_touchable_floatingactionbutton}
+          onPress={() => this._shareFilm()}
+        >
+          <Image
+            style={styles.share_image}
+            source={require("../Images/ic_share.png")}
+          />
+        </TouchableOpacity>
+      );
+    }
   }
 
   _toggleFavorite() {
@@ -36,7 +71,7 @@ class FilmDetail extends Component {
     var sourceImage = require("../Images/ic_favorite_border.png");
     if (
       this.props.favoritesFilm.findIndex(
-        item => item.id === this.state.movie.id
+        (item) => item.id === this.state.movie.id
       ) !== -1
     ) {
       sourceImage = require("../Images/ic_favorite.png");
@@ -51,7 +86,7 @@ class FilmDetail extends Component {
         <ScrollView
           style={styles.scrollview_container}
           contentContainerStyle={{
-            flexGrow: 1
+            flexGrow: 1,
           }}
         >
           <Image
@@ -78,12 +113,12 @@ class FilmDetail extends Component {
             </Text>
             <Text style={styles.detail_text}>Budget: {movie.budget}$</Text>
             <Text style={styles.detail_text}>
-              Genres: {movie.genres.map(genre => genre.name).join(" / ")}
+              Genres: {movie.genres.map((genre) => genre.name).join(" / ")}
             </Text>
             <Text style={styles.detail_text}>
               Companies:
               {movie.production_companies
-                .map(company => company.name)
+                .map((company) => company.name)
                 .join(" / ")}
             </Text>
           </View>
@@ -108,6 +143,7 @@ class FilmDetail extends Component {
       <View style={styles.main_container}>
         {this._displayFilm()}
         {this._displayLoading()}
+        {this._displayFloatingActionButton()}
       </View>
     );
   }
@@ -115,19 +151,19 @@ class FilmDetail extends Component {
 
 const styles = StyleSheet.create({
   main_container: {
-    flex: 1
+    flex: 1,
   },
   loading_container: {
     position: "absolute",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   scrollview_container: {
     flex: 1,
-    padding: 3
+    padding: 3,
   },
   movie_image: {
-    flex: 0.3
+    flex: 0.3,
   },
   title_text: {
     fontSize: 25,
@@ -135,33 +171,48 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "AmericanTypewriter-Bold",
     padding: 5,
-    marginTop: 10
+    marginTop: 10,
   },
   description_text: {
     padding: 10,
     fontFamily: "American Typewriter",
     fontSize: 15,
-    marginTop: 10
+    marginTop: 10,
   },
   details_view: {
     padding: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   detail_text: {
     fontSize: 15,
     fontWeight: "500",
-    fontFamily: "American Typewriter"
+    fontFamily: "American Typewriter",
   },
   favorite_container: {
-    alignItems: "center"
+    alignItems: "center",
   },
   favorite_image: {
     width: 40,
-    height: 40
-  }
+    height: 40,
+  },
+  share_touchable_floatingactionbutton: {
+    position: "absolute",
+    width: 60,
+    height: 60,
+    right: 30,
+    bottom: 30,
+    borderRadius: 30,
+    backgroundColor: "#e91e63",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  share_image: {
+    width: 30,
+    height: 30,
+  },
 });
 
-const mapStateToProps = state => {
+const mapStateToProps = (state) => {
   return { favoritesFilm: state.favoritesFilm };
 };
 export default connect(mapStateToProps)(FilmDetail);
