@@ -6,43 +6,39 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import FilmDetail from "../Components/FilmDetail";
 import Favorites from "../Components/Favorites";
 import { Image, StyleSheet } from "react-native";
-import Test from "../Components/Test";
 
 const SearchStackNavigator = createStackNavigator({
   Search: {
     screen: Search,
     navigationOptions: {
-      title: "Search"
-    }
+      title: "Search",
+    },
   },
   FilmDetail: {
     screen: FilmDetail,
     navigationOptions: {
-      title: "Details"
-    }
-  }
+      title: "Details",
+    },
+  },
 });
 
 const FavoriteStackNavigator = createStackNavigator({
   Favorites: {
     screen: Favorites,
     navigationOptions: {
-      title: "Favorites"
-    }
+      title: "Favorites",
+    },
   },
   FilmDetail: {
     screen: FilmDetail,
     navigationOptions: {
-      title: "Details"
-    }
-  }
+      title: "Details",
+    },
+  },
 });
 
 const MoviesTabNavigator = createBottomTabNavigator(
   {
-    Test: {
-      screen: Test
-    },
     Search: {
       screen: SearchStackNavigator,
       navigationOptions: {
@@ -53,8 +49,8 @@ const MoviesTabNavigator = createBottomTabNavigator(
               style={styles.icon}
             />
           );
-        }
-      }
+        },
+      },
     },
     Favorites: {
       screen: FavoriteStackNavigator,
@@ -66,22 +62,22 @@ const MoviesTabNavigator = createBottomTabNavigator(
               style={styles.icon}
             />
           );
-        }
-      }
-    }
+        },
+      },
+    },
   },
   {
     tabBarOptions: {
       showLabel: false,
       showIcon: true,
       activeBackgroundColor: "#DDDDDD",
-      inactiveBackgroundColor: "#FFFFFF"
-    }
+      inactiveBackgroundColor: "#FFFFFF",
+    },
   }
 );
 
 export default createAppContainer(MoviesTabNavigator);
 
 const styles = StyleSheet.create({
-  icon: { width: 30, height: 30 }
+  icon: { width: 30, height: 30 },
 });
