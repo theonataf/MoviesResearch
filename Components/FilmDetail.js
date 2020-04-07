@@ -12,10 +12,27 @@ import {
 import { getFilmDetailFromApi, getImageFromApi } from "../API/TMDBApi";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
+import { NavigationTabProp } from "react-navigation-tabs";
 
 class FilmDetail extends Component {
-
-  static navigationOptions)
+  static navigationOptions = ({ navigation }) => {
+    const { params } = navigation.state;
+    if (params.movie !== undefined && Platform.OS === "ios") {
+      return {
+        headerRight: (
+          <TouchableOpacity
+            style={styles.share_touchable_headerrightbutton}
+            onPress={() => params.shareFilm()}
+          >
+            <Image
+              style={styles.share_image}
+              source={require("../Images/ic_share.png")}
+            />
+          </TouchableOpacity>
+        ),
+      };
+    }
+  };
 
   constructor(props) {
     super(props);
@@ -40,10 +57,11 @@ class FilmDetail extends Component {
       movie: this.state.movie,
     });
   }
-  _shareFilm() {
+
+  _shareFilm = () => {
     const { movie } = this.state;
     Share.share({ title: movie.title, message: movie.overview });
-  }
+  };
 
   _displayFloatingActionButton() {
     const { movie } = this.state;
