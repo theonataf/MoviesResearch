@@ -12,14 +12,14 @@ import {
 import { getFilmDetailFromApi, getImageFromApi } from "../API/TMDBApi";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
-import { NavigationTabProp } from "react-navigation-tabs";
+import EnlargeShrink from "../Animations/EnlargeShrink";
 
 class FilmDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
     if (params.movie !== undefined && Platform.OS === "ios") {
       return {
-        headerRight: (
+        headerRight: () => (
           <TouchableOpacity
             style={styles.share_touchable_headerrightbutton}
             onPress={() => params.shareFilm()}
@@ -87,14 +87,20 @@ class FilmDetail extends Component {
 
   _displayFavoriteImage() {
     var sourceImage = require("../Images/ic_favorite_border.png");
+    let shouldEnlarge = false;
     if (
       this.props.favoritesFilm.findIndex(
         (item) => item.id === this.state.movie.id
       ) !== -1
     ) {
+      shouldEnlarge = true;
       sourceImage = require("../Images/ic_favorite.png");
     }
-    return <Image source={sourceImage} style={styles.favorite_image} />;
+    return (
+      <EnlargeShrink shouldEnlarge={shouldEnlarge}>
+        <Image style={styles.favorite_image} source={sourceImage} />
+      </EnlargeShrink>
+    );
   }
 
   _displayFilm() {
@@ -210,8 +216,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   favorite_image: {
-    width: 40,
-    height: 40,
+    flex: 1,
+    width: null,
+    height: null,
   },
   share_touchable_floatingactionbutton: {
     position: "absolute",
